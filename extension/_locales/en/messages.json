@@ -1,0 +1,10 @@
+{
+  "name": {
+    "message": "Slider control",
+    "description": "extension name"
+  },
+  "description": {
+    "message": "Control slide Google presentation",
+    "description": "extension description"
+  }
+}

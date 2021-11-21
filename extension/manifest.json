@@ -1,26 +1,25 @@
 {
-  "manifest_version": 3,
-  "name": "Chrome Extension v3 Starter",
-  "description": "A minimal example of a chrome extension using manifest v3",
   "version": "0.0.1",
+  "manifest_version": 2,
+  "name": "__MSG_name__",
+  "description": "__MSG_description__",
+  "default_locale": "en",
   "icons": {
     "16": "logo/logo-16.png",
     "48": "logo/logo-48.png",
     "128": "logo/logo-128.png"
   },
   "options_page": "settings/settings.html",
-  "action": {
-    "default_title": "Chrome Addon v3 Starter",
-    "default_popup": "popup/popup.html"
-  },
-  "permissions": ["background", "tabs", "bookmarks", "unlimitedStorage"],
-  "host_permissions": ["https://docs.google.com/*"],
+  "permissions": ["storage", "background", "tabs", "bookmarks", "unlimitedStorage"],
+  "web_accessible_resources": ["foreground.js", "execute.js"],
   "background": {
     "service_worker": "service-worker.js"
   },
   "content_scripts": [
     {
       "js": ["foreground.js"],
+      "run_at": "document_idle",
+      "all_frames": false,
       "matches": ["https://docs.google.com/*"]
     }
   ]
