@@ -1,25 +1,36 @@
 {
   "version": "0.0.1",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_name__",
   "description": "__MSG_description__",
   "default_locale": "en",
   "icons": {
-    "16": "logo/logo-16.png",
-    "48": "logo/logo-48.png",
-    "128": "logo/logo-128.png"
+    "16": "icons/logo-16.png",
+    "48": "icons/logo-48.png",
+    "128": "icons/logo-128.png"
   },
-  "options_page": "settings/settings.html",
   "permissions": ["storage", "background", "tabs", "bookmarks", "unlimitedStorage"],
-  "web_accessible_resources": ["foreground.js", "execute.js"],
+  "options_page": "settings/settings.html",
+  "action": {
+    "default_title": "Chrome Addon v3 Starter",
+    "default_popup": "popup/popup.html"
+  },
   "background": {
-    "service_worker": "service-worker.js"
+    "service_worker": "service_worker.js"
   },
   "content_scripts": [
     {
-      "js": ["foreground.js"],
-      "run_at": "document_idle",
-      "all_frames": false,
+      "js": ["content_script_present.js"],
+      "matches": ["https://docs.google.com/**/present*"]
+    },
+    {
+      "js": ["content_script_edit.js"],
+      "matches": ["https://docs.google.com/**/edit*"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content_script_present.js", "execute.js"],
       "matches": ["https://docs.google.com/*"]
     }
   ]
