@@ -1,0 +1,5 @@
+Сначала создал в git bash командами бранч, сразу переключился на него коммандой 
+git checkout -b test-branch
+Создал в корне файл test-text-file, чтобы создать изменение. 
+git add test-text-file.txt
+git commit -a
