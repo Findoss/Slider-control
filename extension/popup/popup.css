@@ -1,0 +1,40 @@
+html {
+  font-size: 20px;
+}
+
+body {
+  width: 10rem;
+  height: 6rem;
+  padding: 10px;
+}
+
+.section {
+  display: flex;
+}
+
+.section_key {
+  font-size: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.section_key__number {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  font-family: monospace;
+  padding: 5px;
+  background-color: lightblue;
+}
+
+.button {
+  height: 2rem;
+  width: 100%;
+  border: 1px solid black;
+  background-color: wheat;
+}
+
+.button:hover {
+  background-color: whitesmoke;
+  cursor: pointer;
+}
