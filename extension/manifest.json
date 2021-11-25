@@ -9,7 +9,13 @@
     "48": "icons/logo-48.png",
     "128": "icons/logo-128.png"
   },
-  "permissions": ["storage", "background", "tabs", "bookmarks", "unlimitedStorage"],
+  "permissions": [
+    "storage",
+    "background",
+    "tabs",
+    "bookmarks",
+    "unlimitedStorage"
+  ],
   "options_page": "settings/settings.html",
   "action": {
     "default_title": "Chrome Addon v3 Starter",
