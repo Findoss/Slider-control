@@ -2,8 +2,8 @@
  * @format
  */
 
-const $buttonNext = document.querySelector(".punch-viewer-navbar-next");
-const $buttonPre = document.querySelector(".punch-viewer-navbar-prev");
+const $buttonNext = document.querySelector('.punch-viewer-navbar-next');
+const $buttonPre = document.querySelector('.punch-viewer-navbar-prev');
 
 (async () => {
   async function init() {
@@ -40,42 +40,42 @@ const $buttonPre = document.querySelector(".punch-viewer-navbar-prev");
       }
     }
 
-    $buttonNext.addEventListener("click", sendNextSlide);
-    $buttonPre.addEventListener("click", sendPrevSlide);
+    $buttonNext.addEventListener('click', sendNextSlide);
+    $buttonPre.addEventListener('click', sendPrevSlide);
 
-    document.addEventListener("click", sendNextSlide);
+    document.addEventListener('click', sendNextSlide);
 
-    document.addEventListener("keyup", (event) => {
+    document.addEventListener('keyup', event => {
       switch (event.key) {
-        case "ArrowLeft":
+        case 'ArrowLeft':
           sendPrevSlide(event);
           break;
-        case "ArrowRight":
+        case 'ArrowRight':
           sendNextSlide(event);
           break;
-        case "ArrowUp":
+        case 'ArrowUp':
           sendPrevSlide(event);
           break;
-        case "ArrowDown":
+        case 'ArrowDown':
           sendNextSlide(event);
           break;
       }
     });
 
-    window.addEventListener("mousewheel", debounce(onScroll, 70), {
-      passive: false,
+    window.addEventListener('mousewheel', debounce(onScroll, 70), {
+      passive: false
     });
   }
 
   // загружаем данные презы из контекста страницы
   async function loadGoogleData() {
     return new Promise((res, rej) => {
-      const $script = document.createElement("script");
-      $script.src = chrome.runtime.getURL("execute.js");
+      const $script = document.createElement('script');
+      $script.src = chrome.runtime.getURL('execute.js');
 
       document.body.appendChild($script);
 
-      document.body.addEventListener("init-slide-control", (e) => {
+      document.body.addEventListener('init-slide-control', e => {
         const store = e.detail.googleDataView;
         res(store);
         $script.remove();
@@ -90,20 +90,20 @@ const $buttonPre = document.querySelector(".punch-viewer-navbar-prev");
   async function sendNextSlide(event) {
     event.preventDefault();
     event.stopPropagation();
-    chrome.runtime.sendMessage({
-      contentScriptQuery: "postFetch",
-      data: {
-        id: "next-slide",
-      },
-      url: `${api}/key`,
-    });
-    console.log("sendNextSlide");
+    // chrome.runtime.sendMessage({
+    //   contentScriptQuery: "postFetch",
+    //   data: {
+    //     id: "next-slide",
+    //   },
+    //   url: `${api}/key`,
+    // });
+    console.log('sendNextSlide');
   }
 
   async function sendPrevSlide(event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log("sendPrevSlide");
+    console.log('sendPrevSlide');
   }
 
   async function getKey(payload) {

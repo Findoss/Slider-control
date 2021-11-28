@@ -1,20 +1,20 @@
 {
   "name": "slider-control",
   "version": "1.0.0",
-  "description": "Сервис для управления Google presentation\r круто",
-  "main": "index.js",
-  "scripts": {
-    "server:start": "cd server && node index.js",
-    "server:dev": "cd server && nodemon"
-  },
+  "description": "Сервис для управления Google presentation",
+  "author": "Nikita Stroganov",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Findoss/Slider-control.git"
   },
-  "author": "Nikita Stroganov",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Findoss/Slider-control/issues"
+  },
+  "main": "index.js",
+  "scripts": {
+    "server:start": "cd server && node index.js",
+    "server:dev": "cd server && nodemon"
   },
   "homepage": "https://github.com/Findoss/Slider-control#readme",
   "dependencies": {
@@ -22,13 +22,8 @@
     "helmet": "^4.6.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "test/*",
-      "docs/*"
-    ],
-    "delay": 2500
+    "eslint": "^8.3.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.0"
   }
 }

@@ -9,24 +9,18 @@
     "48": "icons/logo-48.png",
     "128": "icons/logo-128.png"
   },
-  "permissions": [
-    "storage",
-    "background",
-    "tabs",
-    "bookmarks",
-    "unlimitedStorage"
-  ],
+  "permissions": ["storage", "background", "tabs", "bookmarks", "unlimitedStorage"],
   "options_page": "settings/settings.html",
   "action": {
     "default_title": "Chrome Addon v3 Starter",
     "default_popup": "popup/popup.html"
   },
   "background": {
-    "service_worker": "service_worker.js"
+    "service_worker": "service-worker.js"
   },
   "content_scripts": [
     {
-      "js": ["content_script_present.js"],
+      "js": ["content-script-present.js"],
       "matches": ["https://docs.google.com/**/present*"]
     },
     {
@@ -36,7 +30,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content_script_present.js", "execute.js"],
+      "resources": ["content-script-present.js", "execute.js"],
       "matches": ["https://docs.google.com/*"]
     }
   ]
