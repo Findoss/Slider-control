@@ -33,11 +33,11 @@
 
 ### Менеджер для Node.js
 
-[ ] [NVM](https://github.com/coreybutler/nvm-windows)
+- [ ] [NVM](https://github.com/coreybutler/nvm-windows)
 
 ### Платформа для выполнения js
 
-[ ] Node.js через nvm (LST Gallium)
+- [ ] Node.js через nvm (LST Gallium)
 
 ## Верстка
 
