@@ -1,15 +1,20 @@
 const $key = document.querySelector('.section_key__number');
 const $buttonNewKey = document.querySelector('.button_new_key');
 
+function init() {
+  $buttonNewKey.addEventListener('click', getNewKey);
+  getNewKey();
+}
+
 function updateKey(key) {
-  $key.classList.add('special-text');
-  $key.textContent = key;
+  $key.textContent = JSON.stringify(key);
 }
 
 function getNewKey() {
-  console.log('btn getNewKey');
-  updateKey((Math.random() * 1000000).toFixed(0));
+  chrome.runtime.sendMessage({ action: 'get-key' }, key => {
+    // if (key) updateKey(key);
+    updateKey(key);
+  });
 }
 
-$buttonNewKey.addEventListener('click', getNewKey);
-updateKey();
+init();

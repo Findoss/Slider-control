@@ -9,7 +9,7 @@
     "48": "icons/logo-48.png",
     "128": "icons/logo-128.png"
   },
-  "permissions": ["storage", "background", "tabs", "bookmarks", "unlimitedStorage"],
+  "permissions": ["webNavigation", "storage", "background"],
   "options_page": "settings/settings.html",
   "action": {
     "default_title": "Chrome Addon v3 Starter",
@@ -20,11 +20,12 @@
   },
   "content_scripts": [
     {
+      "run_at": "document_end",
       "js": ["content-script-present.js"],
       "matches": ["https://docs.google.com/**/present*"]
     },
     {
-      "js": ["content_script_edit.js"],
+      "js": ["content-script-edit.js"],
       "matches": ["https://docs.google.com/**/edit*"]
     }
   ],
