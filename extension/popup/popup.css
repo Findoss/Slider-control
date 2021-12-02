@@ -4,8 +4,12 @@ html {
 
 body {
   width: 10rem;
-  height: 6rem;
+  height: 5rem;
   padding: 10px;
+}
+
+.hide {
+  visibility: hidden;
 }
 
 .section {
