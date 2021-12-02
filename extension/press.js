@@ -2,15 +2,15 @@
  * @format
  */
 
-function keydown (k) {
+function keydown(k) {
   const oEvent = document.createEvent("KeyboardEvent");
-  
+
   // Chromium Hack
-  Object.defineProperty(oEvent, "keyCode", ({
+  Object.defineProperty(oEvent, "keyCode", {
     get: function () {
       return this.keyCodeVal;
     },
-  }));
+  });
 
   Object.defineProperty(oEvent, "which", {
     get: function () {
@@ -25,6 +25,6 @@ function keydown (k) {
   document.body.dispatchEvent(oEvent);
 }
 
-keydown(document.querySelector('script[data-id="press-key"]').dataset.key);
-
-
+{
+  keydown(document.querySelector('script[data-id="press-key"]').dataset.key);
+}
