@@ -1,35 +1,51 @@
-importScripts('service-worker-utils.js')
+/**
+ * @format
+ */
 
-// chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-//   if (request.contentScriptQuery == 'getFetch') {
-//     const url = request.url;
-//     // fetch(url)
-//     //   .then(response => response.json())
-//     //   .then(response => sendResponse(response))
-//     //   .catch();
-//     return true;
-//   }
+importScripts('service-worker-utils.js');
 
-//   if (request.contentScriptQuery == 'postFetch') {
-//     try {
-//       let raw = await fetch(request.url, {
-//         method: 'POST',
-//         headers: {
-//           Accept: 'application/json',
-//           'Content-Type': 'application/json'
-//         },
-//         body: request.data
-//       });
-//       const data = await raw.json();
+function setKey(key) {
+  chrome.storage.local.set({ key: key });
+}
 
-//       console.log(data);
-//       sendResponse(data);
-//     } catch (error) {
-//       console.error(error);
-//     }
+function getKey() {
+  return chrome.storage.local.get('key');
+}
 
-//     return true;
-//   }
+function init() {
+  chrome.runtime.onMessage.addListener(e => {
+    setKey(startPresentation(e));
+  });
 
-//   return true;
-// });
+  chrome.runtime.onMessage.addListener((req, info, cb) => {
+    if (req.action === 'get-key') {
+      const key = getKey();
+
+      if (key) {
+        cb(key);
+      } else {
+        cb(startPresentation());
+      }
+
+      return true;
+    }
+  });
+
+  chrome.webNavigation.onHistoryStateUpdated.addListener(updateSlide);
+}
+
+function updateSlide(e) {
+  const { url } = e;
+
+  const searchParams = new URLSearchParams(new URL(url).searchParams);
+
+  // todo send server next slide
+  console.log(searchParams.get('slide'));
+}
+
+function startPresentation(data) {
+  console.log(data);
+  return Math.random();
+}
+
+init();
