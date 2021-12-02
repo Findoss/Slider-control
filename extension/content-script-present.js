@@ -2,36 +2,34 @@
  * @format
  */
 
-const NEXT_BUTTON_CODE = 39;
-const PREV_BUTTON_CODE = 37;
-
-const $buttonNext = document.querySelector('.punch-viewer-navbar-next');
-const $buttonPre = document.querySelector('.punch-viewer-navbar-prev');
+const $buttonNext = document.querySelector(".punch-viewer-navbar-next");
+const $buttonPre = document.querySelector(".punch-viewer-navbar-prev");
 
 (async () => {
   async function init() {
-    getGoogleData();
+    chrome.runtime.onMessage.addListener((req, info, cb) => {
+      if (req.action === "get-data-presentation") {
+        extractGoogleData().then((data) => {
+          cb(data);
+        });
+      }
 
-    // setInterval(()=>{
-    //   emulateActionUser(NEXT_BUTTON_CODE);
-    // },3000)
+      if (req.action === "key-press") {
+        emulateActionUser(req.codeKey);
+      }
+
+      return true;
+    });
   }
 
-  // получаем и отправляем данные в вебворкер презентации
-  async function getGoogleData(params) {
-    const googleData = await extractGoogleData();
-    await sendGoogleData(googleData);
-  }
-
-  // загружаем данные презы из контекста страницы
   async function extractGoogleData() {
     return new Promise((res, rej) => {
-      const $script = document.createElement('script');
-      $script.src = chrome.runtime.getURL('execute.js');
+      const $script = document.createElement("script");
+      $script.src = chrome.runtime.getURL("execute.js");
 
       document.body.appendChild($script);
 
-      document.body.addEventListener('init-slide-control', e => {
+      document.body.addEventListener("init-slide-control", (e) => {
         const { googleDataView } = e.detail;
         res(googleDataView);
         $script.remove();
@@ -39,9 +37,14 @@ const $buttonPre = document.querySelector('.punch-viewer-navbar-prev');
     });
   }
 
-  async function sendGoogleData() {
-    //
-  }
+  const emulateActionUser = (key) => {
+    const $script = document.createElement("script");
+    $script.src = chrome.runtime.getURL("press.js");
+    $script.dataset.key = key;
+    $script.dataset.id = "press-key";
+    document.body.appendChild($script);
+    $script.onload = () => $script.remove();
+  };
 
   init();
 })();
