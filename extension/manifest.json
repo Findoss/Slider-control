@@ -12,12 +12,13 @@
   "permissions": ["webNavigation", "storage", "background"],
   "options_page": "settings/settings.html",
   "action": {
-    "default_title": "Chrome Addon v3 Starter",
+    "default_title": "__MSG_name__",
     "default_popup": "popup/popup.html"
   },
   "background": {
     "service_worker": "service-worker.js"
   },
+  "host_permissions": ["https://docs.google.com/*", "https://localhost:5010/*"],
   "content_scripts": [
     {
       "run_at": "document_end",
