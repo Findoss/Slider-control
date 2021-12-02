@@ -1,34 +1,46 @@
-const express = require('express');
-const helmet = require('helmet');
+/**
+ * @format
+ */
+
+const express = require("express");
+const helmet = require("helmet");
+const genKey = require("./utils");
+const store = require("./store");
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.disable('x-powered-by');
+app.disable("x-powered-by");
 
-const store = [
-  {
-    key: 0,
-    docId: '0',
-    clients: [],
-    data: {},
-    state: {}
-  }
-];
-
-app.all('/', function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+app.all("*", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
   next();
 });
 
-app.get('/', (req, res) => {
-  res.json('asd');
+app.post("/start", (req, res) => {
+  const { body } = req;
+
+  store.removeById(body.id);
+
+  const key = genKey();
+
+  store.add({
+    key,
+    ...body,
+  });
+
+  res.json({ key: key });
 });
 
-app.post('/key', (req, res) => {
-  console.log(req.body);
-  res.json({ key: (Math.random() * 1000000).toFixed(0) });
+app.post("/update", (req, res) => {
+  const { body } = req;
+
+  console.log(body);
+  res.json({});
 });
 
 app.listen(5010);
+
+console.log(`start ${5010} port`);
