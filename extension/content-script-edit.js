@@ -3,23 +3,23 @@
  */
 
 const ModeEnum = {
-  PRESENT: 'present',
-  present: 'PRESENT',
-  EDIT: 'edit',
-  edit: 'EDIT'
+  PRESENT: "present",
+  present: "PRESENT",
+  EDIT: "edit",
+  edit: "EDIT",
 };
 
 const SelectorsGoogle = {
-  TITLE_BAR: '.docs-titlebar-buttons'
+  TITLE_BAR: ".docs-titlebar-buttons",
 };
+
+const $titleBar = document.querySelector(SelectorsGoogle.TITLE_BAR);
 
 (async () => {
   function init() {
-    const $titleBar = document.querySelector(SelectorsGoogle.TITLE_BAR);
-
-    const $btnStart = document.createElement('button');
-    $btnStart.textContent = 'Start presentation';
-    $btnStart.addEventListener('click', () => {
+    const $btnStart = document.createElement("button");
+    $btnStart.textContent = "Start presentation";
+    $btnStart.addEventListener("click", () => {
       location.href = location.href.replace(ModeEnum.EDIT, ModeEnum.PRESENT);
     });
 
