@@ -2,6 +2,9 @@
  * @format
  */
 
+const NEXT_BUTTON_CODE = 39;
+const PREV_BUTTON_CODE = 37;
+
 const $buttonNext = document.querySelector('.punch-viewer-navbar-next');
 const $buttonPre = document.querySelector('.punch-viewer-navbar-prev');
 
@@ -9,6 +12,10 @@ const $buttonPre = document.querySelector('.punch-viewer-navbar-prev');
   async function init() {
     getGoogleData();
     initEventListeners();
+
+    // setInterval(()=>{
+    //   emulateActionUser(NEXT_BUTTON_CODE);
+    // },3000)
   }
 
   // получаем и отправляем данные в вебворкер презентации
@@ -123,6 +130,15 @@ const $buttonPre = document.querySelector('.punch-viewer-navbar-prev');
     //   }
     // }
     // );
+  }
+
+  const emulateActionUser = (key) => {
+    const $script = document.createElement('script');
+    $script.src = chrome.runtime.getURL('press.js');
+    $script.dataset.key = key;
+    $script.dataset.id = 'press-key';
+    document.body.appendChild($script);
+    $script.onload = () => $script.remove();
   }
 
   init();

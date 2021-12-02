@@ -21,16 +21,16 @@
   "content_scripts": [
     {
       "js": ["content-script-present.js"],
-      "matches": ["https://docs.google.com/**/present*"]
+      "matches": ["https://docs.google.com/presentation/**/present*"]
     },
     {
-      "js": ["content_script_edit.js"],
-      "matches": ["https://docs.google.com/**/edit*"]
+      "js": ["content-script-edit.js"],
+      "matches": ["https://docs.google.com/presentation/**/edit*"]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content-script-present.js", "execute.js"],
+      "resources": ["content-script-present.js", "execute.js", "press.js"],
       "matches": ["https://docs.google.com/*"]
     }
   ]
