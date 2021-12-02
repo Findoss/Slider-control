@@ -1,16 +1,21 @@
-const data = {
-  googleDataView: {
-    id: window.viewerData.docId,
-    title: window.viewerData.title,
-    slides: window.viewerData.docData[1].map(item => {
-      return { index: item[1], slide: item[0], text: item[9] };
-    }),
-    currentSlide: 0
-  }
-};
+/**
+ * @format
+ */
 
-const eventLoadData = new CustomEvent('init-slide-control', {
-  detail: data
-});
+{
+  const data = {
+    googleDataView: {
+      id: window.viewerData.docId,
+      title: window.viewerData.title,
+      slides: window.viewerData.docData[1].map((item) => {
+        return { index: item[1], slide: item[0], text: item[9] };
+      }),
+    },
+  };
 
-document.body.dispatchEvent(eventLoadData);
+  const eventLoadData = new CustomEvent("init-slide-control", {
+    detail: data,
+  });
+
+  document.body.dispatchEvent(eventLoadData);
+}
