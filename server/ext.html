@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EXT</title>
+  </head>
+  <body>
+    <button class="slide">next slide</button>
+    <div class="decsr"></div>
+    <script>
+      const $slide = document.querySelector('.slide');
+      const $decsr = document.querySelector('.decsr');
+
+      const socket = new WebSocket('ws://localhost:5010');
+      let key = null;
+
+      $slide.addEventListener('click', () => {
+        socket.send(
+          JSON.stringify({
+            action: 'updateSlide',
+            payload: {
+              type: 'EXT',
+              key: key,
+              idSlide: 'qrwqerqwe5645'
+            }
+          })
+        );
+      });
+
+      socket.onopen = () => {
+        console.log('←', 'getKey');
+        socket.send(
+          JSON.stringify({
+            action: 'getKey',
+            payload: {
+              id: 'qwerqwer',
+              slide: [
+                {
+                  index: 1,
+                  slide: 'qwerqwer',
+                  text: 'sdf1sad65f1a65we'
+                }
+              ]
+            }
+          })
+        );
+      };
+
+      socket.onmessage = event => {
+        const data = JSON.parse(event.data);
+        console.log('→', data);
+
+        if (data.action === 'key') {
+          key = data.payload.key;
+          $decsr.textContent = key;
+        }
+
+        // if (data.action === 'key') {
+        //   key = data.payload.key;
+        // }
+      };
+    </script>
+  </body>
+</html>

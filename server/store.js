@@ -30,19 +30,19 @@ class Store {
   }
 
   findById(id) {
-    return this.store.find((v) => v.id === id);
+    return this.store.find(v => v.id === id);
   }
 
   findIndexById(id) {
-    return this.store.find((v) => v.id === id);
+    return this.store.find(v => v.id === id);
   }
 
   findByKey(key) {
-    return this.store.find((v) => v.key === key);
+    return this.store.find(v => v.key === key);
   }
 
   findIndexByKey(key) {
-    return this.store.findIndex((v) => v.key === key);
+    return this.store.findIndex(v => v.key === key);
   }
 
   getAll() {
@@ -50,5 +50,4 @@ class Store {
   }
 }
 
-const store = new Store();
-module.exports = store;
+export const store = new Store();

@@ -2,45 +2,95 @@
  * @format
  */
 
-const express = require("express");
-const helmet = require("helmet");
-const genKey = require("./utils");
-const store = require("./store");
+import { WebSocketServer } from 'ws';
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
-app.disable("x-powered-by");
+import { store } from './store.js';
+import { genKey, formatData } from './utils.js';
+import { deviceEnum } from '../common/enums.js';
 
-app.all("*", function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-  next();
-});
+const wss = new WebSocketServer({ port: 5010 });
 
-app.post("/start", (req, res) => {
-  const { body } = req;
-
-  store.removeById(body.id);
-
-  const key = genKey();
-
-  store.add({
-    key,
-    ...body,
+wss.on('connection', ws => {
+  ws.on('message', data => {
+    console.log('→ ', JSON.parse(data));
+    const { payload, action } = JSON.parse(data);
+    actions[action](ws, payload);
   });
-
-  res.json({ key: key });
 });
 
-app.post("/update", (req, res) => {
-  const { body } = req;
+const actions = {
+  getKey: (ws, payload) => {
+    const data = store.findById(payload.id);
+    let key = null;
 
-  console.log(body);
-  res.json({});
-});
+    if (data !== undefined) {
+      data.ext = ws;
+      key = data.key;
+    } else {
+      store.removeById(payload.id);
+      key = genKey();
+      store.add({
+        id: payload.id,
+        key,
+        ext: ws,
+        clients: [],
+        presentation: payload
+      });
 
-app.listen(5010);
+      console.log(store);
+    }
 
-console.log(`start ${5010} port`);
+    const msg = formatData('key', { key: key });
+    console.log('← ', JSON.parse(msg));
+    ws.send(msg);
+  },
+  regKey: (ws, { key }) => {
+    const data = store.findByKey(key);
+
+    if (data === undefined) {
+      const msg = formatData('error', { text: 'not found key' }, 404);
+      console.log('← ', JSON.parse(msg));
+      ws.send(msg);
+      return;
+    }
+
+    data.clients.push(ws);
+
+    const msg = formatData('presentation', data.presentation);
+    console.log('← ', JSON.parse(msg));
+    ws.send(msg);
+  },
+  updateSlide: (ws, { key, type, idSlide }) => {
+    const data = store.findByKey(key);
+
+    if (data === undefined) {
+      const msg = formatData('error', { text: 'not found key' }, 404);
+      console.log('← ', JSON.parse(msg));
+      ws.send(msg);
+      return;
+    }
+
+    const msg = formatData('updateSlide', { text: 123 });
+
+    if (type === deviceEnum.EXT) {
+      // broadcast
+      data.clients.forEach(client => {
+        client.send(msg);
+      });
+    }
+
+    if (type === deviceEnum.CLIENT) {
+      // broadcast
+      data.clients.forEach(client => {
+        console.log('← ', JSON.parse(msg));
+        if (ws !== client) {
+          client.send(msg);
+        }
+        data.ext.send(msg);
+      });
+    }
+
+    // const msg = formatData('presentation', data.presentation);
+    // ws.send(msg);
+  }
+};
