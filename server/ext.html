@@ -8,58 +8,111 @@
   </head>
   <body>
     <button class="slide">next slide</button>
+    <div class="key"></div>
     <div class="decsr"></div>
     <script>
       const $slide = document.querySelector('.slide');
+      const $key = document.querySelector('.key');
       const $decsr = document.querySelector('.decsr');
 
-      const socket = new WebSocket('ws://localhost:5010');
-      let key = null;
+      const ws = new WebSocket('ws://localhost:5010');
+
+      const presentation = new Proxy(
+        {
+          key: null,
+          id: 'qwerqwer',
+          title: 'тестовая презентация',
+          currentSlideId: '111slideId',
+          slides: [
+            {
+              id: '111slideId',
+              index: 1,
+              text: '111_подсказка'
+            },
+            {
+              id: '222slideId',
+              index: 2,
+              text: '222_подсказка'
+            },
+            {
+              id: '333slideId',
+              index: 3,
+              text: '333_подсказка'
+            },
+            {
+              id: '444slideId',
+              index: 4,
+              text: '444_подсказка'
+            }
+          ]
+        },
+        {
+          set: function (target, property, value) {
+            if (property === 'key') {
+              $key.textContent = value;
+            }
+
+            if (property === 'currentSlideId') {
+              $decsr.textContent = value;
+            }
+
+            return (target[property] = value);
+          }
+        }
+      );
+
+      const actions = {
+        key(ws, { key }) {
+          presentation.key = key;
+        },
+        updateSlide(ws, { idSlide }) {
+          presentation.currentSlideId = idSlide;
+        },
+        error(ws, { text }) {
+          $decsr.textContent = text;
+        }
+      };
 
       $slide.addEventListener('click', () => {
-        socket.send(
+        ws.send(
           JSON.stringify({
             action: 'updateSlide',
             payload: {
               type: 'EXT',
-              key: key,
-              idSlide: 'qrwqerqwe5645'
+              key: presentation.key,
+              idSlide: (() => {
+                const currentSlideIndex = presentation.slides.findIndex(slide => {
+                  return slide.id === presentation.currentSlideId;
+                });
+
+                if (currentSlideIndex + 1 >= presentation.slides.length) {
+                  return (presentation.currentSlideId = presentation.slides[0].id);
+                }
+
+                const newSlideId = presentation.slides[currentSlideIndex + 1].id;
+                presentation.currentSlideId = newSlideId;
+                return newSlideId;
+              })()
             }
           })
         );
       });
 
-      socket.onopen = () => {
+      ws.onopen = () => {
         console.log('←', 'getKey');
-        socket.send(
+        ws.send(
           JSON.stringify({
             action: 'getKey',
-            payload: {
-              id: 'qwerqwer',
-              slide: [
-                {
-                  index: 1,
-                  slide: 'qwerqwer',
-                  text: 'sdf1sad65f1a65we'
-                }
-              ]
-            }
+            payload: presentation
           })
         );
       };
 
-      socket.onmessage = event => {
+      ws.onmessage = event => {
         const data = JSON.parse(event.data);
-        console.log('→', data);
-
-        if (data.action === 'key') {
-          key = data.payload.key;
-          $decsr.textContent = key;
-        }
-
-        // if (data.action === 'key') {
-        //   key = data.payload.key;
-        // }
+        console.log('→ ', data);
+        const { payload, action } = data;
+        actions[action](ws, payload);
       };
     </script>
   </body>
