@@ -3,9 +3,9 @@
  */
 
 import { store } from './store.js';
-import { genKey, formatData } from './utils.js';
-import { deviceEnum } from '../common/enums.js';
-import { Presentation } from './presentation.js';
+import { genKey } from './utils.js';
+import { formatData } from '../common/formatData.js';
+import { Presentation } from '../common/presentation.js';
 
 export const getKey = (ws, payload) => {
   // get
@@ -15,7 +15,7 @@ export const getKey = (ws, payload) => {
   // logic
   // обновляем существующий
   if (presentation !== undefined) {
-    presentation.ext = ws;
+    presentation.addClient(ws);
     key = presentation.key;
   }
 
@@ -29,15 +29,14 @@ export const getKey = (ws, payload) => {
       key,
       title: payload.title,
       currentSlideId: payload.currentSlideId,
-      slides: payload.slides,
-      ext: ws
+      slides: payload.slides
     });
+    presentation.addClient(ws);
     store.add(presentation);
   }
 
   // send
   const msg = formatData('key', { key: key });
-  console.log('← ', JSON.parse(msg));
   ws.send(msg);
 };
 
@@ -48,52 +47,35 @@ export const regKey = (ws, { key }) => {
   // logic
   if (presentation === undefined) {
     const msg = formatData('error', { text: 'not found key' }, 404);
-    console.log('← ', JSON.parse(msg));
     ws.send(msg);
     return;
   }
-  presentation.clients.push(ws);
+  presentation.addClient(ws);
 
   // send
-  const msg = formatData('presentation', presentation.get());
-  console.log('← ', JSON.parse(msg));
+  const msg = formatData('initPresentation', presentation.get());
   ws.send(msg);
 };
 
-export const updateSlide = (ws, { key, type, idSlide }) => {
+export const updateSlide = (ws, { key, idSlide }) => {
   // get
   const presentation = store.findByKey(key);
 
   // logic
   if (presentation === undefined) {
     const msg = formatData('error', { text: 'not found key' }, 404);
-    console.log('← ', JSON.parse(msg));
     ws.send(msg);
     return;
   }
   presentation.currentSlideId = idSlide;
-  const msg = formatData('updateSlide', { key, type, idSlide });
-  console.log('← ', JSON.parse(msg));
+  const msg = formatData('updateSlide', { key, idSlide });
 
   // send
-  if (type === deviceEnum.EXT) {
-    presentation.clients.forEach(client => {
+  presentation.clients.forEach(client => {
+    if (ws !== client) {
       client.send(msg);
-    });
-  }
-
-  if (type === deviceEnum.CLIENT) {
-    presentation.clients.forEach(client => {
-      if (ws !== client) {
-        client.send(msg);
-      }
-    });
-    try {
-      presentation.ext.send(msg);
-    } catch (error) {
-      console.log(error);
     }
-  }
+  });
 };
 
 export const error = (ws, { text }) => {
