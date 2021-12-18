@@ -9,17 +9,23 @@
   </head>
   <body>
     <div class="box connect-box">
-      <input placeholder="key" type="text" class="input input-key" />
+      <input placeholder="key" type="text" class="input input-key" value="218831" />
       <br />
       <button class="btn connect">connect</button>
     </div>
-    <div class="box hide">
+    <div class="box control-box hide">
+      <div class="title"></div>
       <div class="text"></div>
-      <div class="box control-box">
+      <div class="box control-panel">
         <button class="btn pre">← pre</button>
         <button class="btn next">next →</button>
       </div>
     </div>
-    <script src="index.js"></script>
+    <script type="module" src="../common/contsnts.js"></script>
+    <script type="module" src="../common/presentation.js"></script>
+    <script type="module" src="../common/formatData.js"></script>
+    <script type="module" src="./dom.js"></script>
+    <script type="module" src="./render.js"></script>
+    <script type="module" src="index.js"></script>
   </body>
 </html>
