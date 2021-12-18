@@ -21,23 +21,23 @@
 
 Расширения для VSCode
 
-1. [ ] ESlint - проверка кода
-1. [ ] Prettier - форматирование кода
-1. [ ] Code Spell Checker - проверка правописания
-   1. [ ] Russion - Code Spell Checker
-1. [ ] EditorConfig - настройки редактора
-1. [ ] Visual Studio IntelliCode - подсказки автодополнения
-1. [ ] Path Intellisense - подсказки автодополнения пути
-1. [ ] Quokka.js - реалтайм интерпретатор js внутри VSCode
-1. [ ] Live Share - шаринг редактора
+1. [x] ESlint - проверка кода
+1. [x] Prettier - форматирование кода
+1. [x] Code Spell Checker - проверка правописания
+   1. [x] Russion - Code Spell Checker
+1. [x] EditorConfig - настройки редактора
+1. [x] Visual Studio IntelliCode - подсказки автодополнения
+1. [x] Path Intellisense - подсказки автодополнения пути
+1. [x] Quokka.js - реалтайм интерпретатор js внутри VSCode
+1. [x] Live Share - шаринг редактора
 
 ### Менеджер для Node.js
 
-- [ ] [NVM](https://github.com/coreybutler/nvm-windows)
+- [x] [NVM](https://github.com/coreybutler/nvm-windows)
 
 ### Платформа для выполнения js
 
-- [ ] Node.js через nvm (LST Gallium)
+- [x] Node.js через nvm (LST Gallium)
 
 ## Верстка
 
