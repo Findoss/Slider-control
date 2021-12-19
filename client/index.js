@@ -41,7 +41,7 @@ $btnNext.addEventListener('click', () => {
 });
 
 const nextSlide = v => {
-  const currentSlideIndex = getSlideIndexById(presentation.currentSlideId);
+  const currentSlideIndex = presentation.getSlideIndexById(presentation.currentSlideId);
   const slideIndex = currentSlideIndex + v;
 
   if (slideIndex < 0 || slideIndex >= presentation.slides.length) {
