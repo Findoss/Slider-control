@@ -62,13 +62,13 @@
       );
 
       const actions = {
-        key(ws, { key }) {
+        Key(ws, { key }) {
           presentation.key = key;
         },
-        updateSlide(ws, { idSlide }) {
+        UpdateSlide(ws, { idSlide }) {
           presentation.currentSlideId = idSlide;
         },
-        error(ws, { text }) {
+        Error(ws, { text }) {
           $decsr.textContent = text;
         }
       };
@@ -76,9 +76,8 @@
       $slide.addEventListener('click', () => {
         ws.send(
           JSON.stringify({
-            action: 'updateSlide',
+            action: 'UpdateSlide',
             payload: {
-              type: 'EXT',
               key: presentation.key,
               idSlide: (() => {
                 const currentSlideIndex = presentation.slides.findIndex(slide => {
@@ -99,10 +98,10 @@
       });
 
       ws.onopen = () => {
-        console.log('←', 'getKey');
+        console.log('←', 'GetKey');
         ws.send(
           JSON.stringify({
-            action: 'getKey',
+            action: 'GetKey',
             payload: presentation
           })
         );

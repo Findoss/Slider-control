@@ -12,16 +12,19 @@ export class Transport {
   }
 
   send(...payload) {
-    console.log('←', ...payload);
-    this.ws.send(formatData(...payload));
+    const msg = formatData(...payload);
+    console.log('←', JSON.parse(msg));
+
+    this.ws.send(msg);
   }
 
-  take(event) {
-    const data = JSON.parse(event.data);
+  take(raw) {
+    const data = JSON.parse(raw.data);
     console.log('→', data);
 
     const { payload, action } = data;
-    console.log(this);
-    this[`take${action}`](payload);
+    if (typeof this[`take${action}`] === 'function') {
+      this[`take${action}`](payload);
+    }
   }
 }
