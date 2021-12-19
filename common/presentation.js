@@ -9,6 +9,7 @@ export class Presentation {
     this.title = title;
     this.currentSlideId = currentSlideId;
     this.slides = slides;
+    this.error = null;
     this.clients = []; // only server
   }
 
@@ -25,6 +26,12 @@ export class Presentation {
   getSlide() {
     return this.slides.find(slide => {
       return slide.id === this.currentSlideId;
+    });
+  }
+
+  getSlideIndexById(id) {
+    return this.slides.findIndex(slide => {
+      return slide.id === id;
     });
   }
 

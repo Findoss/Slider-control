@@ -1,11 +1,10 @@
-import { formatData } from '../common/formatData.js';
 import { Presentation } from '../common/Presentation.js';
-import { WS_API } from '../common/contsnts.js';
-import { actions } from './actions.js';
+
 import { render } from './render.js';
 import { dom } from './dom.js';
+import { transport } from './transport.js';
 
-const { renderNotes, renderTitle } = render;
+const { renderNotes, renderTitle, renderError } = render;
 const { $btnConnect, $inputKey, $btnNext, $btnPre } = dom;
 
 const initPresentation = new Presentation({
@@ -21,62 +20,48 @@ export const presentation = new Proxy(initPresentation, {
     if (property === 'currentSlideId') {
       updateSlideId(target, property, value);
     }
+
+    if (property === 'error') {
+      updateError(target, property, value);
+    }
     return (target[property] = value);
   }
 });
 
-const ws = new WebSocket(WS_API);
-
-ws.onmessage = event => {
-  const data = JSON.parse(event.data);
-  const { payload, action } = data;
-  actions[action](ws, payload);
-};
-
 $btnConnect.addEventListener('click', () => {
-  ws.send(formatData('regKey', { key: $inputKey.value }));
+  transport.sendRegKey($inputKey.value);
 });
 
 $btnPre.addEventListener('click', () => {
-  sendNewIdSlide(-1);
+  newIdSlide(-1);
 });
 
 $btnNext.addEventListener('click', () => {
-  sendNewIdSlide(+1);
+  newIdSlide(+1);
 });
 
 const nextSlide = v => {
-  const currentSlideIndex = presentation.slides.findIndex(slide => {
-    return slide.id === presentation.currentSlideId;
-  });
+  const currentSlideIndex = getSlideIndexById(presentation.currentSlideId);
+  const slideIndex = currentSlideIndex + v;
 
-  if (currentSlideIndex + v >= presentation.slides.length) {
+  if (slideIndex < 0 || slideIndex >= presentation.slides.length) {
     return null;
   }
 
-  if (currentSlideIndex + v <= -1) {
-    return null;
-  }
-
-  const newSlideId = presentation.slides[currentSlideIndex + v].id;
+  const newSlideId = presentation.slides[slideIndex].id;
   presentation.currentSlideId = newSlideId;
   return newSlideId;
 };
 
-const sendNewIdSlide = v => {
+const newIdSlide = v => {
   const id = nextSlide(v);
   if (id !== null) {
-    ws.send(
-      formatData('updateSlide', {
-        key: presentation.key,
-        idSlide: id
-      })
-    );
+    transport.sendUpdateSlide(id);
   }
 };
 
 const updateSlideId = (target, property, value) => {
-  const currentSlideIndex = target.slides.findIndex(slide => slide.id === value);
+  const currentSlideIndex = target.getSlideIndexById(value);
   const textNotice = target.slides[currentSlideIndex].text;
 
   renderNotes(textNotice);
@@ -85,4 +70,8 @@ const updateSlideId = (target, property, value) => {
     currentSlideIndex: currentSlideIndex + 1,
     totalSliders: target.slides.length
   });
+};
+
+const updateError = (target, property, value) => {
+  renderError(value);
 };
